@@ -1,0 +1,35 @@
+info:
+  contact: {}
+paths:
+  /datacenter_operations/megacli:
+    get:
+      consumes:
+      - application/json
+      description: Run MegaCLI Commands. Only allowable by Database Team and Data
+        Center Team.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Run MegaCLI Commands
+      tags:
+      - DataCenter
+  /example/helloworld:
+    get:
+      consumes:
+      - application/json
+      description: do ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: ping example
+      tags:
+      - example
+swagger: "2.0"
