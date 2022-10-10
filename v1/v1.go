@@ -39,6 +39,7 @@ func Initialize() {
 	panicIfError(err)
 	idpMetadata, err := samlsp.FetchMetadata(context.Background(), http.DefaultClient,
 		*idpMetadataURL)
+	panicIfError(err)
 	rootURL, err := url.Parse(serverurl)
 	panicIfError(err)
 	samlSP, _ := samlsp.New(samlsp.Options{
