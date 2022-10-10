@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"context"
 	"crypto/rsa"
 	"crypto/tls"
 	"crypto/x509"
@@ -29,10 +30,6 @@ var listenAddr = "0.0.0.0:443"
 // @BasePath /api/v1
 func Initialize() {
 	r := gin.Default()
-	// setup public routes
-	r.GET("/", IndexHandler)
-	r.GET("/login", LoginHandler)
-	r.GET("/authorization-code/callback", AuthCodeCallbackHandler)
 
 	keyPair, err := tls.LoadX509KeyPair(sessioncert, sessionkey)
 	panicIfError(err)
@@ -40,14 +37,16 @@ func Initialize() {
 	panicIfError(err)
 	idpMetadataURL, err := url.Parse(metdataurl)
 	panicIfError(err)
+	idpMetadata, err := samlsp.FetchMetadata(context.Background(), http.DefaultClient,
+		*idpMetadataURL)
 	rootURL, err := url.Parse(serverurl)
 	panicIfError(err)
 	samlSP, _ := samlsp.New(samlsp.Options{
 		URL:         *rootURL,
 		Key:         keyPair.PrivateKey.(*rsa.PrivateKey),
 		Certificate: keyPair.Leaf,
-		//IDPMetadataURL: idpMetadataURL, // you can also have Metadata XML instead of URL
-		EntityID: entityId,
+		IDPMetadata: idpMetadata, // you can also have Metadata XML instead of URL
+		EntityID:    entityId,
 	})
 	app := http.HandlerFunc(hello)
 	http.Handle("/hello", samlSP.RequireAccount(app))
