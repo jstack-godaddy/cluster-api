@@ -1,8 +1,8 @@
 package endpoints
 
 import (
-	endpoint_datacenter_operations "dbs-api/v1/endpoints/datacenter_operations"
-	endpoint_example "dbs-api/v1/endpoints/example"
+	cluster_endpoint "dbs-api/v1/endpoints/cluster_endpoint"
+	endpoint_example "dbs-api/v1/endpoints/endpoint_example"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,9 +14,9 @@ func Initialize(v1 *gin.RouterGroup) {
 		endpoint_example.Initialize(eg)
 	}
 
-	dcog := v1.Group("/datacenter_operations")
+	cog := v1.Group("/cluster")
 	{
-		endpoint_datacenter_operations.Initialize(dcog)
+		cluster_endpoint.Initialize(cog)
 	}
 
 }

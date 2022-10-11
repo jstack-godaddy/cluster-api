@@ -1,12 +1,12 @@
 info:
   contact: {}
 paths:
-  /datacenter_operations/megacli:
+  /cluster/information:
     get:
       consumes:
       - application/json
-      description: Run MegaCLI Commands. Only allowable by Database Team and Data
-        Center Team.
+      description: Get information on a cluster. Displays all metadata for specified
+        clusters.
       produces:
       - application/json
       responses:
@@ -14,9 +14,9 @@ paths:
           description: OK
           schema:
             type: string
-      summary: Run MegaCLI Commands
+      summary: Get information on a cluster
       tags:
-      - DataCenter
+      - Cluster
   /example/helloworld:
     get:
       consumes:

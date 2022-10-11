@@ -16,9 +16,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/datacenter_operations/megacli": {
+        "/cluster/information": {
             "get": {
-                "description": "Run MegaCLI Commands. Only allowable by Database Team and Data Center Team.",
+                "description": "Get information on a cluster. Displays all metadata for specified clusters.",
                 "consumes": [
                     "application/json"
                 ],
@@ -26,9 +26,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "DataCenter"
+                    "Cluster"
                 ],
-                "summary": "Run MegaCLI Commands",
+                "summary": "Get information on a cluster",
                 "responses": {
                     "200": {
                         "description": "OK",
