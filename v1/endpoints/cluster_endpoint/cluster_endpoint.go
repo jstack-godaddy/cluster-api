@@ -15,9 +15,13 @@ func Initialize(cog *gin.RouterGroup) {
 func ConfigAuth() (provider *gophercloud.ProviderClient, err error) {
 	opts := gophercloud.AuthOptions{
 		IdentityEndpoint: "https://phx.openstack.int.gd3p.tools:5000",
-		Username:         "{username}",
-		Password:         "{password}",
+		DomainID:         "default",
+		Username:         "jstack",
+		Password:         "",
+		TenantName:       "dbs-infra-dev",
 	}
 
 	provider, err = openstack.AuthenticatedClient(opts)
+
+	return
 }

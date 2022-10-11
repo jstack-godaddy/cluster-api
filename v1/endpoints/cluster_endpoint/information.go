@@ -21,7 +21,7 @@ func Information(g *gin.Context) {
 	if err == nil {
 		g.JSON(http.StatusOK, provider.TokenID)
 	} else {
-		g.JSON(http.StatusUnauthorized, "Could not connect to OpenStack.")
+		g.JSON(http.StatusUnauthorized, err)
 	}
 
 }
