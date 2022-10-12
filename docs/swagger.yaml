@@ -1,6 +1,21 @@
 info:
   contact: {}
 paths:
+  /cluster/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new cluster.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Create a server cluster
+      tags:
+      - Cluster
   /cluster/information:
     get:
       consumes:

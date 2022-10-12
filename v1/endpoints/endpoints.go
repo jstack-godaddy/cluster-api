@@ -1,7 +1,7 @@
 package endpoints
 
 import (
-	cluster_endpoint "dbs-api/v1/endpoints/cluster_endpoint"
+	cluster_endpoint "dbs-api/v1/endpoints/cluster"
 	endpoint_example "dbs-api/v1/endpoints/endpoint_example"
 
 	"github.com/gin-gonic/gin"
