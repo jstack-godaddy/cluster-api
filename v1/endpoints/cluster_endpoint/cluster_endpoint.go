@@ -4,9 +4,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Initialize(cog *gin.RouterGroup) {
+func Initialize(cg *gin.RouterGroup) {
 
-	cog.POST("/", Create)
-	cog.DELETE("/", Delete)
+	cg.POST("/", Create)
+	cg.DELETE("/", Delete)
 
 }

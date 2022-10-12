@@ -15,14 +15,14 @@ func Initialize(v1 *gin.RouterGroup) {
 		endpoint_example.Initialize(eg)
 	}
 
-	cog := v1.Group("/cluster")
+	cg := v1.Group("/cluster")
 	{
-		cluster_endpoint.Initialize(cog)
+		cluster_endpoint.Initialize(cg)
 	}
 
-	iog := v1.Group("/information")
+	ig := v1.Group("/information")
 	{
-		information_endpoint.Initialize(iog)
+		information_endpoint.Initialize(ig)
 	}
 
 }

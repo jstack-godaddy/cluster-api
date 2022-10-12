@@ -11,14 +11,14 @@ import (
 // ServersByProject GET
 // @Summary Get servers by project
 // @Schemes
-// @Description Get servers by project. Displays all servers in a project.
+// @Description Displays all servers in a project.
 // @Tags Information
 // @Accept json
 // @Produce json
 // @Param        dc   query      string  true  "Datacenter" Enums(phx, sxb, iad)
-// @Param        project   query      string  true  "Project"
+// @Param        project   query	string  true  "Project"
 // @Success 200 {string} Example JSON Output
-// @Router /information/ServersByProject [get]
+// @Router /information/serversbyproject [get]
 func ServersByProject(g *gin.Context) {
 
 	dc := g.Request.URL.Query().Get("dc")

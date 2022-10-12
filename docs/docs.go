@@ -83,9 +83,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/information/ProjectsByTeam": {
+        "/information/projectsbyteam": {
             "get": {
-                "description": "Get information on a cluster. Displays all metadata for specified clusters.",
+                "description": "Get all projects by team requested.",
                 "consumes": [
                     "application/json"
                 ],
@@ -93,7 +93,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Information ProjectsByTeam"
+                    "Information"
                 ],
                 "summary": "Get projects by team ProjectsByTeam",
                 "parameters": [
@@ -114,9 +114,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/information/ServersByProject": {
+        "/information/serversbyproject": {
             "get": {
-                "description": "Get servers by project. Displays all servers in a project.",
+                "description": "Displays all servers in a project.",
                 "consumes": [
                     "application/json"
                 ],
@@ -124,7 +124,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Information ServersByProject"
+                    "Information"
                 ],
                 "summary": "Get servers by project",
                 "parameters": [

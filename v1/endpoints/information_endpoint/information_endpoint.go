@@ -4,9 +4,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Initialize(iog *gin.RouterGroup) {
+func Initialize(ig *gin.RouterGroup) {
 
-	iog.GET("/information/ServersByProject", ServersByProject)
-	iog.GET("/information/ProjectsByTeam", ProjectsByTeam)
+	ig.GET("/projectsbyteam", ProjectsByTeam)
+	ig.GET("/serversbyproject", ServersByProject)
 
 }

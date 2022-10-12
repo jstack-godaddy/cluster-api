@@ -45,12 +45,11 @@ paths:
       summary: ping example
       tags:
       - example
-  /information/ProjectsByTeam:
+  /information/projectsbyteam:
     get:
       consumes:
       - application/json
-      description: Get information on a cluster. Displays all metadata for specified
-        clusters.
+      description: Get all projects by team requested.
       parameters:
       - description: Datacenter
         in: query
@@ -65,12 +64,12 @@ paths:
             type: string
       summary: Get projects by team ProjectsByTeam
       tags:
-      - Information ProjectsByTeam
-  /information/ServersByProject:
+      - Information
+  /information/serversbyproject:
     get:
       consumes:
       - application/json
-      description: Get servers by project. Displays all servers in a project.
+      description: Displays all servers in a project.
       parameters:
       - description: Datacenter
         enum:
@@ -95,5 +94,5 @@ paths:
             type: string
       summary: Get servers by project
       tags:
-      - Information ServersByProject
+      - Information
 swagger: "2.0"
