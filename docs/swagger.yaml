@@ -1,7 +1,21 @@
 info:
   contact: {}
 paths:
-  /cluster/create:
+  /cluster:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a new cluster.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Delete a server cluster
+      tags:
+      - Cluster
     post:
       consumes:
       - application/json
@@ -14,22 +28,6 @@ paths:
           schema:
             type: string
       summary: Create a server cluster
-      tags:
-      - Cluster
-  /cluster/information:
-    get:
-      consumes:
-      - application/json
-      description: Get information on a cluster. Displays all metadata for specified
-        clusters.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      summary: Get information on a cluster
       tags:
       - Cluster
   /example/helloworld:
@@ -47,4 +45,55 @@ paths:
       summary: ping example
       tags:
       - example
+  /information/ProjectsByTeam:
+    get:
+      consumes:
+      - application/json
+      description: Get information on a cluster. Displays all metadata for specified
+        clusters.
+      parameters:
+      - description: Datacenter
+        in: query
+        name: owning_team
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get projects by team ProjectsByTeam
+      tags:
+      - Information ProjectsByTeam
+  /information/ServersByProject:
+    get:
+      consumes:
+      - application/json
+      description: Get servers by project. Displays all servers in a project.
+      parameters:
+      - description: Datacenter
+        enum:
+        - phx
+        - sxb
+        - iad
+        in: query
+        name: dc
+        required: true
+        type: string
+      - description: Project
+        in: query
+        name: project
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get servers by project
+      tags:
+      - Information ServersByProject
 swagger: "2.0"

@@ -1,8 +1,9 @@
 package endpoints
 
 import (
-	cluster_endpoint "dbs-api/v1/endpoints/cluster"
-	endpoint_example "dbs-api/v1/endpoints/endpoint_example"
+	"dbs-api/v1/endpoints/cluster_endpoint"
+	"dbs-api/v1/endpoints/endpoint_example"
+	"dbs-api/v1/endpoints/information_endpoint"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,6 +18,11 @@ func Initialize(v1 *gin.RouterGroup) {
 	cog := v1.Group("/cluster")
 	{
 		cluster_endpoint.Initialize(cog)
+	}
+
+	iog := v1.Group("/information")
+	{
+		information_endpoint.Initialize(iog)
 	}
 
 }

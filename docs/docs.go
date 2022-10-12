@@ -16,7 +16,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/cluster/create": {
+        "/cluster": {
             "post": {
                 "description": "Create a new cluster.",
                 "consumes": [
@@ -37,11 +37,9 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/cluster/information": {
-            "get": {
-                "description": "Get information on a cluster. Displays all metadata for specified clusters.",
+            },
+            "delete": {
+                "description": "Delete a new cluster.",
                 "consumes": [
                     "application/json"
                 ],
@@ -51,7 +49,7 @@ const docTemplate = `{
                 "tags": [
                     "Cluster"
                 ],
-                "summary": "Get information on a cluster",
+                "summary": "Delete a server cluster",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -75,6 +73,81 @@ const docTemplate = `{
                     "example"
                 ],
                 "summary": "ping example",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/information/ProjectsByTeam": {
+            "get": {
+                "description": "Get information on a cluster. Displays all metadata for specified clusters.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Information ProjectsByTeam"
+                ],
+                "summary": "Get projects by team ProjectsByTeam",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Datacenter",
+                        "name": "owning_team",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/information/ServersByProject": {
+            "get": {
+                "description": "Get servers by project. Displays all servers in a project.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Information ServersByProject"
+                ],
+                "summary": "Get servers by project",
+                "parameters": [
+                    {
+                        "enum": [
+                            "phx",
+                            "sxb",
+                            "iad"
+                        ],
+                        "type": "string",
+                        "description": "Datacenter",
+                        "name": "dc",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Project",
+                        "name": "project",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

@@ -1,4 +1,4 @@
-package cluster
+package cluster_endpoint
 
 import (
 	"net/http"
@@ -14,7 +14,7 @@ import (
 // @Accept json
 // @Produce json
 // @Success 200 {string} Example JSON Output
-// @Router /cluster/create [post]
+// @Router /cluster [post]
 func Create(g *gin.Context) {
 	g.JSON(http.StatusOK, "helloworld")
 }

@@ -1,4 +1,4 @@
-package cluster
+package cluster_endpoint
 
 import (
 	"github.com/gin-gonic/gin"
@@ -6,7 +6,7 @@ import (
 
 func Initialize(cog *gin.RouterGroup) {
 
-	cog.GET("/information", Information)
-	cog.POST("/create", Create)
+	cog.POST("/", Create)
+	cog.DELETE("/", Delete)
 
 }
