@@ -13,9 +13,9 @@ import (
 // @Tags Information
 // @Accept json
 // @Produce json
-// @Param        owning_team   query      string  false  "Datacenter"
+// @Param        owning_team   query      string  false  "Owning Team as defined in SNOW"
 // @Success 200 {string} Example JSON Output
-// @Router /information/projectsbyteam [get]
+// @Router /information/ProjectsByTeam [get]
 func ProjectsByTeam(g *gin.Context) {
 
 	projects := []string{"dbs-infra-dev", "dbs-infra-test", "dbs-infra-prod"}

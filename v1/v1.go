@@ -9,10 +9,12 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @BasePath /api/v1
-func Initialize() {
-	r := gin.Default()
+// @title DBS Linux Cluster API
+// @version 1.0
 
+// @contact.name #mysql in Slack
+// @BasePath /api/v1
+func Initialize(r *gin.Engine) {
 	docs.SwaggerInfo.BasePath = "/api/v1"
 
 	v1 := r.Group("/api/v1")
@@ -20,6 +22,6 @@ func Initialize() {
 		endpoints.Initialize(v1)
 	}
 
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-	r.Run(":8080")
+	r.GET("/v1/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
 }

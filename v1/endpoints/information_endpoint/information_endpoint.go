@@ -6,7 +6,8 @@ import (
 
 func Initialize(ig *gin.RouterGroup) {
 
-	ig.GET("/projectsbyteam", ProjectsByTeam)
-	ig.GET("/serversbyproject", ServersByProject)
+	ig.GET("/ProjectsByTeam", ProjectsByTeam)
+	ig.GET("/ServersByProject", ServersByProject)
+	ig.GET("/GetTeams", GetTeams)
 
 }

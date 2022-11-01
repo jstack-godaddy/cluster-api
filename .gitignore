@@ -16,3 +16,9 @@
 
 # Environment files
 *.env
+
+## Key files
+*.key
+
+## Metadata for idp
+metadata.xml

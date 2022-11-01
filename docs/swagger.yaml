@@ -45,13 +45,34 @@ paths:
       summary: ping example
       tags:
       - example
-  /information/projectsbyteam:
+  /information/GetTeams:
+    get:
+      consumes:
+      - application/json
+      description: Displays all team names attached to a username. Will use currently
+        logged in user by default.
+      parameters:
+      - description: Username in DC1
+        in: query
+        name: username
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get teams as designated by SNOW.
+      tags:
+      - Information
+  /information/ProjectsByTeam:
     get:
       consumes:
       - application/json
       description: Get all projects by team requested.
       parameters:
-      - description: Datacenter
+      - description: Owning Team as defined in SNOW
         in: query
         name: owning_team
         type: string
@@ -65,7 +86,7 @@ paths:
       summary: Get projects by team ProjectsByTeam
       tags:
       - Information
-  /information/serversbyproject:
+  /information/ServersByProject:
     get:
       consumes:
       - application/json
@@ -80,7 +101,7 @@ paths:
         name: dc
         required: true
         type: string
-      - description: Project
+      - description: Project Name
         in: query
         name: project
         required: true

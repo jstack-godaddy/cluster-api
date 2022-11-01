@@ -15,10 +15,10 @@ import (
 // @Tags Information
 // @Accept json
 // @Produce json
-// @Param        dc   query      string  true  "Datacenter" Enums(phx, sxb, iad)
-// @Param        project   query	string  true  "Project"
+// @Param       dc        query	string  true 	"Datacenter" Enums(phx, sxb, iad)
+// @Param       project   query	string  true 	"Project Name"
 // @Success 200 {string} Example JSON Output
-// @Router /information/serversbyproject [get]
+// @Router /information/ServersByProject [get]
 func ServersByProject(g *gin.Context) {
 
 	dc := g.Request.URL.Query().Get("dc")
