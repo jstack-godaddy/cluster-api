@@ -4,6 +4,7 @@ import (
 	"crypto/rsa"
 	"crypto/tls"
 	"crypto/x509"
+	"dbs-api/middleware"
 	v1 "dbs-api/v1"
 	"io"
 	"net/http"
@@ -25,12 +26,16 @@ const (
 )
 
 func main() {
+	// Set up logging
+	al, _ := os.Create("/tmp/gin-raw.log")
+	el, _ := os.Create("/tmp/gin-error.log")
+	gin.DefaultWriter = io.MultiWriter(al)
+	gin.DefaultErrorWriter = io.MultiWriter(el)
+
 	r := gin.Default()
 
-	// Set up logging
-	gin.DisableConsoleColor()
-	f, _ := os.Create("/tmp/gin.log")
-	gin.DefaultWriter = io.MultiWriter(f)
+	r.Use(middleware.DefaultStructuredLogger())
+	r.Use(gin.Recovery())
 
 	// Set up SAML SSO
 	keyPair, err := tls.LoadX509KeyPair(server_cert, server_key)

@@ -42,6 +42,10 @@ type SnowUserGroupsGetResultUG struct {
 	Value string `json:"value"`
 }
 
+type SnowGroupGet struct {
+	Result []map[string]string `json:"Result"`
+}
+
 func (s SnowConnection) queryTable(table string, field string, filter string) (bodyText []byte, err error) {
 	client := &http.Client{}
 	fullURL := s.server + table + "?" + field + "=" + filter
@@ -54,7 +58,7 @@ func (s SnowConnection) queryTable(table string, field string, filter string) (b
 	req.SetBasicAuth(s.user, s.password)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
-	fmt.Println(req)
+	//fmt.Println(req)
 	resp, err := client.Do(req)
 	if err != nil {
 		return
@@ -67,8 +71,10 @@ func (s SnowConnection) queryTable(table string, field string, filter string) (b
 	return
 }
 
-func GetTeams(u string) (teams []string, err error) {
+func GetTeams(u string) (teams []string, httpStatus int, err error) {
 	godotenv.Load("./.snow_creds.env")
+	httpStatus = http.StatusOK
+
 	snow := SnowConnection{
 		server:   os.Getenv("SNOW_SERVER"),
 		user:     os.Getenv("SNOW_USER"),
@@ -83,29 +89,39 @@ func GetTeams(u string) (teams []string, err error) {
 	var uqr SnowGenericGet
 	json.Unmarshal([]byte(userInfo), &uqr)
 
+	if len(uqr.Result) == 0 {
+		httpStatus = http.StatusNotFound
+		teams = append(teams, "User not found.")
+		return
+	}
 	sys_id := uqr.Result[0]["sys_id"]
 
 	userGroupInfo, err := snow.queryTable("sys_user_grmember", "user", sys_id)
 	if err != nil {
+		httpStatus = http.StatusBadRequest
 		return
 	}
 
 	var ugqr SnowUserGroupsGet
 	err = json.Unmarshal([]byte(userGroupInfo), &ugqr)
 	if err != nil {
+		httpStatus = http.StatusBadRequest
 		fmt.Println("Unmarshall err", err)
 	}
 
 	for _, result := range ugqr.Result {
 		groupInfo, err := snow.queryTable("sys_user_group", "sys_id", result.Group.Value)
 		if err != nil {
+			httpStatus = http.StatusBadRequest
 			fmt.Println("Query Error ", err)
 		}
-		var gqr SnowGenericGet
-		err = json.Unmarshal([]byte(groupInfo), &gqr)
-		if err != nil {
-			fmt.Println("Unmarshall err ", err)
-		}
+		//fmt.Println(groupInfo)
+		var gqr SnowGroupGet
+		_ = json.Unmarshal([]byte(groupInfo), &gqr)
+		//if err != nil {
+		//	fmt.Println("Unmarshall err ", err)
+		//}
+		//fmt.Println(gqr.Result[0]["name"])
 		teams = append(teams, gqr.Result[0]["name"])
 	}
 

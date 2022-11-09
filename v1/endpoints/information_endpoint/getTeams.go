@@ -2,7 +2,6 @@ package information_endpoint
 
 import (
 	"dbs-api/v1/helpers"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,11 +18,11 @@ import (
 // @Router /information/GetTeams [get]
 func GetTeams(g *gin.Context) {
 	username := g.Request.URL.Query().Get("username")
-	
-	teams,err := helpers.GetTeams(username)
+
+	teams, httpStatus, err := helpers.GetTeams(username)
 	if err != nil {
 		return
 	}
-	
-	g.JSON(http.StatusOK, teams)
+
+	g.JSON(httpStatus, teams)
 }
