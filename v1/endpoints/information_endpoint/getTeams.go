@@ -19,7 +19,7 @@ import (
 func GetTeams(g *gin.Context) {
 	username := g.Request.URL.Query().Get("username")
 
-	teams, httpStatus, err := helpers.GetTeams(username)
+	teams, httpStatus, err := helpers.GetTeamsFromSNOW(username)
 	if err != nil {
 		return
 	}

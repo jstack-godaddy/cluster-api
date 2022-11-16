@@ -71,7 +71,7 @@ func (s SnowConnection) queryTable(table string, field string, filter string) (b
 	return
 }
 
-func GetTeams(u string) (teams []string, httpStatus int, err error) {
+func GetTeamsFromSNOW(u string) (teams []string, httpStatus int, err error) {
 	godotenv.Load("./.snow_creds.env")
 	httpStatus = http.StatusOK
 

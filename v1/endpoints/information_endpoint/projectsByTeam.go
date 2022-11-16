@@ -1,7 +1,7 @@
 package information_endpoint
 
 import (
-	"net/http"
+	"dbs-api/v1/helpers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,8 +17,16 @@ import (
 // @Success 200 {string} Example JSON Output
 // @Router /information/ProjectsByTeam [get]
 func ProjectsByTeam(g *gin.Context) {
+	owning_team := g.Request.URL.Query().Get("owning_team")
+	db, err := helpers.NewDBClient()
+	if err != nil {
+		panic(err.Error())
+	}
 
-	projects := []string{"dbs-infra-dev", "dbs-infra-test", "dbs-infra-prod"}
+	projects, httpStatus, err := db.GetProjectsByTeam(owning_team)
+	if err != nil {
+		panic(err.Error())
+	}
 
-	g.JSON(http.StatusOK, projects)
+	g.JSON(httpStatus, projects)
 }

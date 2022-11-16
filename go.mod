@@ -14,6 +14,7 @@ require (
 	github.com/beevik/etree v1.1.0 // indirect
 	github.com/crewjam/httperr v0.2.0 // indirect
 	github.com/crewjam/saml v0.4.8 // indirect
+	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.2 // indirect
 	github.com/gwatts/gin-adapter v1.0.0 // indirect
 	github.com/jonboulle/clockwork v0.2.2 // indirect
