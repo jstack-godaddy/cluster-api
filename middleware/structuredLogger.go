@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"bytes"
 	"os"
 	"time"
 
@@ -15,6 +16,16 @@ func DefaultStructuredLogger() gin.HandlerFunc {
 	return StructuredLogger(&log.Logger)
 }
 
+type bodyLogWriter struct {
+	gin.ResponseWriter
+	body *bytes.Buffer
+}
+
+func (w bodyLogWriter) Write(b []byte) (int, error) {
+	w.body.Write(b)
+	return w.ResponseWriter.Write(b)
+}
+
 // StructuredLogger logs a gin HTTP request in JSON format. Allows to set the
 // logger for testing purposes.
 func StructuredLogger(logger *zerolog.Logger) gin.HandlerFunc {
@@ -25,6 +36,8 @@ func StructuredLogger(logger *zerolog.Logger) gin.HandlerFunc {
 		start := time.Now() // Start timer
 		path := c.Request.URL.Path
 		raw := c.Request.URL.RawQuery
+		blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
+		c.Writer = blw
 
 		// Process request
 		c.Next()
@@ -56,12 +69,42 @@ func StructuredLogger(logger *zerolog.Logger) gin.HandlerFunc {
 			logEvent = fileLogger.Info()
 		}
 
-		logEvent.Str("client_id", param.ClientIP).
-			Str("method", param.Method).
-			Int("status_code", param.StatusCode).
-			Int("body_size", param.BodySize).
-			Str("path", param.Path).
-			Str("latency", param.Latency.String()).
-			Msg(param.ErrorMessage)
+		ignored_paths := []string{
+			"/v1/swagger/doc.json",
+			"/v1/swagger/index.html",
+			"/v1/swagger/swagger-ui.css",
+			"/v1/swagger/favicon-32x32.png",
+			"/v1/swagger/swagger-ui-bundle.js",
+			"/v1/swagger/swagger-ui-standalone-preset.js",
+		}
+
+		if contains(ignored_paths, param.Path) {
+			logEvent.Str("client_id", param.ClientIP).
+				Str("method", param.Method).
+				Int("status_code", param.StatusCode).
+				Int("body_size", param.BodySize).
+				Str("path", param.Path).
+				Str("latency", param.Latency.String()).
+				Msg(param.ErrorMessage)
+		} else {
+			logEvent.Str("client_id", param.ClientIP).
+				Str("method", param.Method).
+				Int("status_code", param.StatusCode).
+				Int("body_size", param.BodySize).
+				Str("path", param.Path).
+				Str("latency", param.Latency.String()).
+				Str("response: ", blw.body.String()).
+				Msg(param.ErrorMessage)
+		}
 	}
+}
+
+func contains(s []string, str string) bool {
+	for _, v := range s {
+		if v == str {
+			return true
+		}
+	}
+
+	return false
 }
