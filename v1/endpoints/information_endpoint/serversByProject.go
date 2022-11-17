@@ -23,20 +23,20 @@ func ServersByProject(g *gin.Context) {
 
 	dc := g.Request.URL.Query().Get("dc")
 	if dc == "" {
-		g.JSON(http.StatusBadRequest, "Need to provide datacenter.")
+		g.String(http.StatusBadRequest, "Need to provide datacenter.")
 		return
 	}
 
 	project := g.Request.URL.Query().Get("project")
 	if project == "" {
-		g.JSON(http.StatusBadRequest, "Need to provide datacenter.")
+		g.String(http.StatusBadRequest, "Need to provide datacenter.")
 		return
 	}
 
 	ngosClient, err := helpers.NewNGOSClient(dc, project)
 
 	if err != nil {
-		g.JSON(http.StatusUnauthorized, err)
+		g.String(http.StatusUnauthorized, err.Error())
 		return
 	}
 
@@ -45,12 +45,12 @@ func ServersByProject(g *gin.Context) {
 	}
 	allPages, err := servers.List(ngosClient, listOpts).AllPages()
 	if err != nil {
-		g.JSON(http.StatusBadRequest, err)
+		g.String(http.StatusBadRequest, err.Error())
 		return
 	}
 	allServers, err := servers.ExtractServers(allPages)
 	if err != nil {
-		g.JSON(http.StatusBadRequest, err)
+		g.String(http.StatusBadRequest, err.Error())
 		return
 	}
 

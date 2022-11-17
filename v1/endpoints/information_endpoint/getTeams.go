@@ -21,7 +21,8 @@ func GetTeams(g *gin.Context) {
 
 	teams, httpStatus, err := helpers.GetTeamsFromSNOW(username)
 	if err != nil {
-		return
+		httpStatus = 500
+		g.String(httpStatus, err.Error())
 	}
 
 	g.JSON(httpStatus, teams)
