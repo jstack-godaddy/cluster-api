@@ -16,6 +16,121 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/basic_information/GetAllDataCenters": {
+            "get": {
+                "description": "Get all the data centers we can provision to.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Basic Information"
+                ],
+                "summary": "Get all the data centers we can provision to.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/basic_information/GetAllDatastores": {
+            "get": {
+                "description": "Get all the data stores you can leverage.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Basic Information"
+                ],
+                "summary": "Get all the data stores you can leverage.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/basic_information/GetAllEnvironments": {
+            "get": {
+                "description": "Get all the environments we can provision to.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Basic Information"
+                ],
+                "summary": "Get all the environments we can provision to.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/basic_information/GetAllFlavors": {
+            "get": {
+                "description": "Get all the flavors we can provision on.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Basic Information"
+                ],
+                "summary": "Get all the flavors we can provision on.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/basic_information/GetAllNetworkZones": {
+            "get": {
+                "description": "Get all the network zones we can provision to.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Basic Information"
+                ],
+                "summary": "Get all the network zones we can provision to.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/cluster": {
             "post": {
                 "description": "Create a new cluster.",
@@ -83,38 +198,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/information/GetTeams": {
-            "get": {
-                "description": "Displays all team names attached to a username. Will use currently logged in user by default.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Information"
-                ],
-                "summary": "Get teams as designated by SNOW.",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Username in DC1",
-                        "name": "username",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/information/ProjectsByTeam": {
+        "/project_information/ProjectsByTeam": {
             "get": {
                 "description": "Get all projects by team requested.",
                 "consumes": [
@@ -124,7 +208,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Information"
+                    "Project Information"
                 ],
                 "summary": "Get projects by team ProjectsByTeam",
                 "parameters": [
@@ -145,7 +229,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/information/ServersByProject": {
+        "/project_information/ServersByProject": {
             "get": {
                 "description": "Displays all servers in a project.",
                 "consumes": [
@@ -155,7 +239,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Information"
+                    "Project Information"
                 ],
                 "summary": "Get servers by project",
                 "parameters": [
@@ -177,6 +261,37 @@ const docTemplate = `{
                         "name": "project",
                         "in": "query",
                         "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user_information/GetTeams": {
+            "get": {
+                "description": "Displays all team names attached to a username. Will use currently logged in user by default.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Information"
+                ],
+                "summary": "Get teams as designated by SNOW.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Username in DC1",
+                        "name": "username",
+                        "in": "query"
                     }
                 ],
                 "responses": {

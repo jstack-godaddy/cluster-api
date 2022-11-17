@@ -1,6 +1,81 @@
 info:
   contact: {}
 paths:
+  /basic_information/GetAllDataCenters:
+    get:
+      consumes:
+      - application/json
+      description: Get all the data centers we can provision to.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get all the data centers we can provision to.
+      tags:
+      - Basic Information
+  /basic_information/GetAllDatastores:
+    get:
+      consumes:
+      - application/json
+      description: Get all the data stores you can leverage.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get all the data stores you can leverage.
+      tags:
+      - Basic Information
+  /basic_information/GetAllEnvironments:
+    get:
+      consumes:
+      - application/json
+      description: Get all the environments we can provision to.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get all the environments we can provision to.
+      tags:
+      - Basic Information
+  /basic_information/GetAllFlavors:
+    get:
+      consumes:
+      - application/json
+      description: Get all the flavors we can provision on.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get all the flavors we can provision on.
+      tags:
+      - Basic Information
+  /basic_information/GetAllNetworkZones:
+    get:
+      consumes:
+      - application/json
+      description: Get all the network zones we can provision to.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get all the network zones we can provision to.
+      tags:
+      - Basic Information
   /cluster:
     delete:
       consumes:
@@ -45,28 +120,7 @@ paths:
       summary: ping example
       tags:
       - example
-  /information/GetTeams:
-    get:
-      consumes:
-      - application/json
-      description: Displays all team names attached to a username. Will use currently
-        logged in user by default.
-      parameters:
-      - description: Username in DC1
-        in: query
-        name: username
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      summary: Get teams as designated by SNOW.
-      tags:
-      - Information
-  /information/ProjectsByTeam:
+  /project_information/ProjectsByTeam:
     get:
       consumes:
       - application/json
@@ -85,8 +139,8 @@ paths:
             type: string
       summary: Get projects by team ProjectsByTeam
       tags:
-      - Information
-  /information/ServersByProject:
+      - Project Information
+  /project_information/ServersByProject:
     get:
       consumes:
       - application/json
@@ -115,5 +169,26 @@ paths:
             type: string
       summary: Get servers by project
       tags:
-      - Information
+      - Project Information
+  /user_information/GetTeams:
+    get:
+      consumes:
+      - application/json
+      description: Displays all team names attached to a username. Will use currently
+        logged in user by default.
+      parameters:
+      - description: Username in DC1
+        in: query
+        name: username
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get teams as designated by SNOW.
+      tags:
+      - User Information
 swagger: "2.0"
