@@ -81,14 +81,16 @@ type Server struct {
 }
 
 const (
-	dsn_const               = "%s:%s@tcp(%s:3306)/cluster_api"
-	all_datacenters_query   = `SELECT * FROM datacenters`
-	all_datastores_query    = `SELECT * FROM datastores`
-	all_environments_query  = `SELECT * FROM environments`
-	all_network_zones_query = `SELECT * FROM network_zones`
-	all_flavors_query       = `SELECT * FROM flavors`
-	team_id_from_name_query = `SELECT team_id FROM teams WHERE team_snow=?`
-	projects_by_team_query  = `SELECT * FROM projects WHERE team_id=?`
+	dsn_const                  = "%s:%s@tcp(%s:3306)/cluster_api"
+	all_datacenters_query      = `SELECT * FROM datacenters`
+	all_datastores_query       = `SELECT * FROM datastores`
+	all_environments_query     = `SELECT * FROM environments`
+	all_network_zones_query    = `SELECT * FROM network_zones`
+	all_flavors_query          = `SELECT * FROM flavors`
+	team_id_from_name_query    = `SELECT team_id FROM teams WHERE team_snow=?`
+	projects_by_team_query     = `SELECT * FROM projects WHERE team_id=?`
+	project_id_from_name_query = `SELECT project_id FROM projects WHERE project_name=?`
+	servers_by_project_query   = `SELECT * FROM servers WHERE project_id=?`
 )
 
 func GetAllDataCenters() (dcs []Datacenter, err error) {
@@ -153,6 +155,17 @@ func GetProjectsByTeam(team string) (projects []Project, err error) {
 	_ = row.Scan(&team_id)
 
 	db.Select(&projects, projects_by_team_query, team_id)
+
+	return
+}
+
+func GetServersByProject(project_id string) (servers []Server, err error) {
+
+	godotenv.Load("./.db_creds.env")
+	dsn := fmt.Sprintf(dsn_const, os.Getenv("DB_USER"), os.Getenv("DB_PASS"), os.Getenv("DB_HOST"))
+	db, err := sqlx.Open("mysql", dsn)
+
+	db.Select(&servers, servers_by_project_query, project_id)
 
 	return
 }

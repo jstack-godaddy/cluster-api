@@ -2,6 +2,7 @@ package user_information_endpoint
 
 import (
 	"dbs-api/v1/helpers"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -27,8 +28,7 @@ func GetTeams(g *gin.Context) {
 
 	teams, httpStatus, err := helpers.GetTeamsFromSNOW(username)
 	if err != nil {
-		httpStatus = 500
-		g.String(httpStatus, err.Error())
+		g.String(http.StatusBadRequest, err.Error())
 	}
 
 	g.JSON(httpStatus, teams)

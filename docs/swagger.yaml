@@ -144,7 +144,28 @@ paths:
     get:
       consumes:
       - application/json
-      description: Displays all servers in a project.
+      description: Displays all servers in a project by directly querying our metadata.
+      parameters:
+      - description: Project ID Number
+        in: query
+        name: project_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get servers by project.
+      tags:
+      - Project Information
+  /project_information/ServersByProjectRaw:
+    get:
+      consumes:
+      - application/json
+      description: Displays all servers in a project by directly querying Openstack.
       parameters:
       - description: Datacenter
         enum:
@@ -167,7 +188,7 @@ paths:
           description: OK
           schema:
             type: string
-      summary: Get servers by project
+      summary: Get servers by project.
       tags:
       - Project Information
   /user_information/GetTeams:

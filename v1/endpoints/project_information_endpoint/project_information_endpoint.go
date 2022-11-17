@@ -14,6 +14,7 @@ func Initialize(pig *gin.RouterGroup) {
 
 	pig.GET("/ProjectsByTeam", ProjectsByTeam)
 	pig.GET("/ServersByProject", ServersByProject)
+	pig.GET("/ServersByProjectRaw", ServersByProjectRaw)
 
 }
 
@@ -42,17 +43,45 @@ func ProjectsByTeam(g *gin.Context) {
 }
 
 // ServersByProject GET
-// @Summary Get servers by project
+// @Summary Get servers by project.
 // @Schemes
-// @Description Displays all servers in a project.
+// @Description Displays all servers in a project by directly querying our metadata.
+// @Tags Project Information
+// @Accept json
+// @Produce json
+// @Param       project_id   query	int  true 	"Project ID Number"
+// @Success 200 {string} Example JSON Output
+// @Router /project_information/ServersByProject [get]
+func ServersByProject(g *gin.Context) {
+
+	project_id := g.Request.URL.Query().Get("project_id")
+	if project_id == "" {
+		g.String(http.StatusBadRequest, "Need to provide project ID.")
+		return
+	}
+
+	servers, err := clusterDB.GetServersByProject(project_id)
+	if err != nil {
+		g.String(http.StatusBadRequest, err.Error())
+	} else if len(servers) == 0 {
+		g.String(http.StatusNotFound, "No servers found in project.")
+	}
+
+	g.JSON(http.StatusOK, servers)
+}
+
+// ServersByProjectRaw GET
+// @Summary Get servers by project.
+// @Schemes
+// @Description Displays all servers in a project by directly querying Openstack.
 // @Tags Project Information
 // @Accept json
 // @Produce json
 // @Param       dc        query	string  true 	"Datacenter" Enums(phx, sxb, iad)
 // @Param       project   query	string  true 	"Project Name"
 // @Success 200 {string} Example JSON Output
-// @Router /project_information/ServersByProject [get]
-func ServersByProject(g *gin.Context) {
+// @Router /project_information/ServersByProjectRaw [get]
+func ServersByProjectRaw(g *gin.Context) {
 
 	dc := g.Request.URL.Query().Get("dc")
 	if dc == "" {

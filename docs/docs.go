@@ -231,7 +231,7 @@ const docTemplate = `{
         },
         "/project_information/ServersByProject": {
             "get": {
-                "description": "Displays all servers in a project.",
+                "description": "Displays all servers in a project by directly querying our metadata.",
                 "consumes": [
                     "application/json"
                 ],
@@ -241,7 +241,39 @@ const docTemplate = `{
                 "tags": [
                     "Project Information"
                 ],
-                "summary": "Get servers by project",
+                "summary": "Get servers by project.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Project ID Number",
+                        "name": "project_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/project_information/ServersByProjectRaw": {
+            "get": {
+                "description": "Displays all servers in a project by directly querying Openstack.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Project Information"
+                ],
+                "summary": "Get servers by project.",
                 "parameters": [
                     {
                         "enum": [
