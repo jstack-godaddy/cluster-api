@@ -1,13 +1,25 @@
 package basic_information_endpoint
 
 import (
-	clusterDB "dbs-api/v1/helpers/cdb_wrapper"
+	"dbs-api/v1/helpers"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
+var CDB *helpers.ClusterDB
+
 func Initialize(big *gin.RouterGroup) {
+
+	CDB, err := helpers.NewClusterDBConn()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = CDB.Ping()
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	big.GET("/GetAllDataCenters", GetAllDataCenters)
 	big.GET("/GetAllNetworkZones", GetAllNetworkZones)
@@ -26,7 +38,7 @@ func Initialize(big *gin.RouterGroup) {
 // @Success 200 {string} Example JSON Output
 // @Router /basic_information/GetAllDataCenters [get]
 func GetAllDataCenters(g *gin.Context) {
-	info, err := clusterDB.GetAllDataCenters()
+	info, err := CDB.GetAllDataCenters()
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 	}
@@ -43,7 +55,7 @@ func GetAllDataCenters(g *gin.Context) {
 // @Success 200 {string} Example JSON Output
 // @Router /basic_information/GetAllNetworkZones [get]
 func GetAllNetworkZones(g *gin.Context) {
-	info, err := clusterDB.GetAllNetworkZones()
+	info, err := CDB.GetAllNetworkZones()
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 	}
@@ -60,7 +72,7 @@ func GetAllNetworkZones(g *gin.Context) {
 // @Success 200 {string} Example JSON Output
 // @Router /basic_information/GetAllEnvironments [get]
 func GetAllEnvironments(g *gin.Context) {
-	info, err := clusterDB.GetAllEnvironments()
+	info, err := CDB.GetAllEnvironments()
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 	}
@@ -77,7 +89,7 @@ func GetAllEnvironments(g *gin.Context) {
 // @Success 200 {string} Example JSON Output
 // @Router /basic_information/GetAllFlavors [get]
 func GetAllFlavors(g *gin.Context) {
-	info, err := clusterDB.GetAllFlavors()
+	info, err := CDB.GetAllFlavors()
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 	}
@@ -94,7 +106,7 @@ func GetAllFlavors(g *gin.Context) {
 // @Success 200 {string} Example JSON Output
 // @Router /basic_information/GetAllDatastores [get]
 func GetAllDatastores(g *gin.Context) {
-	info, err := clusterDB.GetAllDatastores()
+	info, err := CDB.GetAllDatastores()
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 	}

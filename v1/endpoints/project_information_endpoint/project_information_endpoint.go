@@ -2,15 +2,26 @@ package project_information_endpoint
 
 import (
 	"dbs-api/v1/helpers"
-	clusterDB "dbs-api/v1/helpers/cdb_wrapper"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
 )
 
+var CDB *helpers.ClusterDB
+
 func Initialize(pig *gin.RouterGroup) {
+
+	CDB, err := helpers.NewClusterDBConn()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = CDB.Ping()
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	pig.GET("/ProjectsByTeam", ProjectsByTeam)
 	pig.GET("/ServersByProject", ServersByProject)
@@ -31,7 +42,7 @@ func Initialize(pig *gin.RouterGroup) {
 func ProjectsByTeam(g *gin.Context) {
 	owning_team := g.Request.URL.Query().Get("owning_team")
 
-	projects, err := clusterDB.GetProjectsByTeam(owning_team)
+	projects, err := CDB.GetProjectsByTeam(owning_team)
 	fmt.Println(projects)
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
@@ -60,7 +71,7 @@ func ServersByProject(g *gin.Context) {
 		return
 	}
 
-	servers, err := clusterDB.GetServersByProject(project_id)
+	servers, err := CDB.GetServersByProject(project_id)
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 	} else if len(servers) == 0 {

@@ -1,4 +1,4 @@
-package clusterDB
+package helpers
 
 import (
 	"fmt"
@@ -8,6 +8,11 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 )
+
+// Struct for database object
+type ClusterDB struct {
+	*sqlx.DB
+}
 
 // Structs to match DB Schema
 type Datacenter struct {
@@ -93,62 +98,51 @@ const (
 	servers_by_project_query   = `SELECT * FROM servers WHERE project_id=?`
 )
 
-func GetAllDataCenters() (dcs []Datacenter, err error) {
-
+func NewClusterDBConn() (clusterDB ClusterDB, err error) {
 	godotenv.Load("./.db_creds.env")
 	dsn := fmt.Sprintf(dsn_const, os.Getenv("DB_USER"), os.Getenv("DB_PASS"), os.Getenv("DB_HOST"))
 	db, err := sqlx.Open("mysql", dsn)
+	clusterDB = ClusterDB{db}
+
+	return
+}
+
+func (db *ClusterDB) GetAllDataCenters() (dcs []Datacenter, err error) {
 
 	db.Select(&dcs, all_datacenters_query)
 
 	return
 }
 
-func GetAllEnvironments() (envs []Environment, err error) {
+func (db *ClusterDB) GetAllEnvironments() (envs []Environment, err error) {
 
-	godotenv.Load("./.db_creds.env")
-	dsn := fmt.Sprintf(dsn_const, os.Getenv("DB_USER"), os.Getenv("DB_PASS"), os.Getenv("DB_HOST"))
-	db, err := sqlx.Open("mysql", dsn)
 	db.Select(&envs, all_environments_query)
 
 	return
 }
 
-func GetAllNetworkZones() (nzs []NetworkZone, err error) {
+func (db *ClusterDB) GetAllNetworkZones() (nzs []NetworkZone, err error) {
 
-	godotenv.Load("./.db_creds.env")
-	dsn := fmt.Sprintf(dsn_const, os.Getenv("DB_USER"), os.Getenv("DB_PASS"), os.Getenv("DB_HOST"))
-	db, err := sqlx.Open("mysql", dsn)
 	db.Select(&nzs, all_network_zones_query)
 
 	return
 }
 
-func GetAllFlavors() (flavors []Flavor, err error) {
+func (db *ClusterDB) GetAllFlavors() (flavors []Flavor, err error) {
 
-	godotenv.Load("./.db_creds.env")
-	dsn := fmt.Sprintf(dsn_const, os.Getenv("DB_USER"), os.Getenv("DB_PASS"), os.Getenv("DB_HOST"))
-	db, err := sqlx.Open("mysql", dsn)
 	db.Select(&flavors, all_flavors_query)
 
 	return
 }
 
-func GetAllDatastores() (datastores []Datastore, err error) {
+func (db *ClusterDB) GetAllDatastores() (datastores []Datastore, err error) {
 
-	godotenv.Load("./.db_creds.env")
-	dsn := fmt.Sprintf(dsn_const, os.Getenv("DB_USER"), os.Getenv("DB_PASS"), os.Getenv("DB_HOST"))
-	db, err := sqlx.Open("mysql", dsn)
 	db.Select(&datastores, all_datastores_query)
 
 	return
 }
 
-func GetProjectsByTeam(team string) (projects []Project, err error) {
-
-	godotenv.Load("./.db_creds.env")
-	dsn := fmt.Sprintf(dsn_const, os.Getenv("DB_USER"), os.Getenv("DB_PASS"), os.Getenv("DB_HOST"))
-	db, err := sqlx.Open("mysql", dsn)
+func (db *ClusterDB) GetProjectsByTeam(team string) (projects []Project, err error) {
 
 	var team_id int
 	row := db.QueryRowx(team_id_from_name_query, team)
@@ -159,11 +153,7 @@ func GetProjectsByTeam(team string) (projects []Project, err error) {
 	return
 }
 
-func GetServersByProject(project_id string) (servers []Server, err error) {
-
-	godotenv.Load("./.db_creds.env")
-	dsn := fmt.Sprintf(dsn_const, os.Getenv("DB_USER"), os.Getenv("DB_PASS"), os.Getenv("DB_HOST"))
-	db, err := sqlx.Open("mysql", dsn)
+func (db *ClusterDB) GetServersByProject(project_id string) (servers []Server, err error) {
 
 	db.Select(&servers, servers_by_project_query, project_id)
 
