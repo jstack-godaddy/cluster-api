@@ -12,7 +12,7 @@ var Cdb *helpers.ClusterDB
 
 func Initialize(big *gin.RouterGroup) {
 
-	Cdb := helpers.NewClusterDBConn()
+	Cdb = helpers.NewClusterDBConn()
 	err := Cdb.Ping()
 	if err != nil {
 		log.Fatalln(err)
