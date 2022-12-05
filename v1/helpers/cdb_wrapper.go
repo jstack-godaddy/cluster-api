@@ -98,13 +98,12 @@ const (
 	servers_by_project_query   = `SELECT * FROM servers WHERE project_id=?`
 )
 
-func NewClusterDBConn() (clusterDB ClusterDB, err error) {
+func NewClusterDBConn() (cdb *ClusterDB) {
 	godotenv.Load("./.db_creds.env")
 	dsn := fmt.Sprintf(dsn_const, os.Getenv("DB_USER"), os.Getenv("DB_PASS"), os.Getenv("DB_HOST"))
-	db, err := sqlx.Open("mysql", dsn)
-	clusterDB = ClusterDB{db}
+	db, _ := sqlx.Open("mysql", dsn)
 
-	return
+	return &ClusterDB{db}
 }
 
 func (db *ClusterDB) GetAllDataCenters() (dcs []Datacenter, err error) {

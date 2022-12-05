@@ -8,15 +8,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var CDB *helpers.ClusterDB
+var Cdb *helpers.ClusterDB
 
 func Initialize(big *gin.RouterGroup) {
 
-	CDB, err := helpers.NewClusterDBConn()
-	if err != nil {
-		log.Fatalln(err)
-	}
-	err = CDB.Ping()
+	Cdb := helpers.NewClusterDBConn()
+	err := Cdb.Ping()
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -38,7 +35,7 @@ func Initialize(big *gin.RouterGroup) {
 // @Success 200 {string} Example JSON Output
 // @Router /basic_information/GetAllDataCenters [get]
 func GetAllDataCenters(g *gin.Context) {
-	info, err := CDB.GetAllDataCenters()
+	info, err := Cdb.GetAllDataCenters()
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 	}
@@ -55,7 +52,7 @@ func GetAllDataCenters(g *gin.Context) {
 // @Success 200 {string} Example JSON Output
 // @Router /basic_information/GetAllNetworkZones [get]
 func GetAllNetworkZones(g *gin.Context) {
-	info, err := CDB.GetAllNetworkZones()
+	info, err := Cdb.GetAllNetworkZones()
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 	}
@@ -72,7 +69,7 @@ func GetAllNetworkZones(g *gin.Context) {
 // @Success 200 {string} Example JSON Output
 // @Router /basic_information/GetAllEnvironments [get]
 func GetAllEnvironments(g *gin.Context) {
-	info, err := CDB.GetAllEnvironments()
+	info, err := Cdb.GetAllEnvironments()
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 	}
@@ -89,7 +86,7 @@ func GetAllEnvironments(g *gin.Context) {
 // @Success 200 {string} Example JSON Output
 // @Router /basic_information/GetAllFlavors [get]
 func GetAllFlavors(g *gin.Context) {
-	info, err := CDB.GetAllFlavors()
+	info, err := Cdb.GetAllFlavors()
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 	}
@@ -106,7 +103,7 @@ func GetAllFlavors(g *gin.Context) {
 // @Success 200 {string} Example JSON Output
 // @Router /basic_information/GetAllDatastores [get]
 func GetAllDatastores(g *gin.Context) {
-	info, err := CDB.GetAllDatastores()
+	info, err := Cdb.GetAllDatastores()
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 	}

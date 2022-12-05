@@ -10,15 +10,12 @@ import (
 	"github.com/gophercloud/gophercloud/openstack/compute/v2/servers"
 )
 
-var CDB *helpers.ClusterDB
+var Cdb *helpers.ClusterDB
 
 func Initialize(pig *gin.RouterGroup) {
 
-	CDB, err := helpers.NewClusterDBConn()
-	if err != nil {
-		log.Fatalln(err)
-	}
-	err = CDB.Ping()
+	Cdb := helpers.NewClusterDBConn()
+	err := Cdb.Ping()
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -42,7 +39,7 @@ func Initialize(pig *gin.RouterGroup) {
 func ProjectsByTeam(g *gin.Context) {
 	owning_team := g.Request.URL.Query().Get("owning_team")
 
-	projects, err := CDB.GetProjectsByTeam(owning_team)
+	projects, err := Cdb.GetProjectsByTeam(owning_team)
 	fmt.Println(projects)
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
@@ -71,7 +68,7 @@ func ServersByProject(g *gin.Context) {
 		return
 	}
 
-	servers, err := CDB.GetServersByProject(project_id)
+	servers, err := Cdb.GetServersByProject(project_id)
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 	} else if len(servers) == 0 {
