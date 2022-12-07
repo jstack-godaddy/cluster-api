@@ -144,6 +144,65 @@ const docTemplate = `{
                     "Cluster"
                 ],
                 "summary": "Create a server cluster",
+                "parameters": [
+                    {
+                        "enum": [
+                            "phx",
+                            "sxb",
+                            "iad"
+                        ],
+                        "type": "string",
+                        "description": "Datacenter",
+                        "name": "dc",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Project Name",
+                        "name": "project",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Cluster Name",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Abbreviation for naming. No more than 8 characters.",
+                        "name": "shortname",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "mgt",
+                            "prd",
+                            "cor",
+                            "gcn"
+                        ],
+                        "type": "string",
+                        "description": "Network Zone",
+                        "name": "networkzone",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "private",
+                            "public"
+                        ],
+                        "type": "string",
+                        "description": "Public or Private floater",
+                        "name": "privateOrPublic",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

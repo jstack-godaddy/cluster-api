@@ -95,6 +95,49 @@ paths:
       consumes:
       - application/json
       description: Create a new cluster.
+      parameters:
+      - description: Datacenter
+        enum:
+        - phx
+        - sxb
+        - iad
+        in: query
+        name: dc
+        required: true
+        type: string
+      - description: Project Name
+        in: query
+        name: project
+        required: true
+        type: string
+      - description: Cluster Name
+        in: query
+        name: name
+        required: true
+        type: string
+      - description: Abbreviation for naming. No more than 8 characters.
+        in: query
+        name: shortname
+        required: true
+        type: string
+      - description: Network Zone
+        enum:
+        - mgt
+        - prd
+        - cor
+        - gcn
+        in: query
+        name: networkzone
+        required: true
+        type: string
+      - description: Public or Private floater
+        enum:
+        - private
+        - public
+        in: query
+        name: privateOrPublic
+        required: true
+        type: string
       produces:
       - application/json
       responses:

@@ -99,7 +99,7 @@ func ServersByProjectRaw(g *gin.Context) {
 
 	project := g.Request.URL.Query().Get("project")
 	if project == "" {
-		g.String(http.StatusBadRequest, "Need to provide datacenter.")
+		g.String(http.StatusBadRequest, "Need to provide project name.")
 		return
 	}
 
@@ -113,7 +113,7 @@ func ServersByProjectRaw(g *gin.Context) {
 	listOpts := servers.ListOpts{
 		AllTenants: false,
 	}
-	allPages, err := servers.List(ngosClient, listOpts).AllPages()
+	allPages, err := servers.List(ngosClient.ServiceClient, listOpts).AllPages()
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 		return
