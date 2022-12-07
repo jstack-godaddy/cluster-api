@@ -168,10 +168,23 @@
                     },
                     {
                         "enum": [
+                            "c8.r16.d200",
+                            "c12.r32.d300",
+                            "c12.r64.d300",
+                            "c16.r96.d900",
+                            "c16.r128.d1200"
+                        ],
+                        "type": "string",
+                        "description": "How big do you want it?",
+                        "name": "flavor",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
                             "mgt",
                             "prd",
-                            "cor",
-                            "gcn"
+                            "cor"
                         ],
                         "type": "string",
                         "description": "Network Zone",

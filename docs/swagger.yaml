@@ -120,12 +120,22 @@ paths:
         name: shortname
         required: true
         type: string
+      - description: How big do you want it?
+        enum:
+        - c8.r16.d200
+        - c12.r32.d300
+        - c12.r64.d300
+        - c16.r96.d900
+        - c16.r128.d1200
+        in: query
+        name: flavor
+        required: true
+        type: string
       - description: Network Zone
         enum:
         - mgt
         - prd
         - cor
-        - gcn
         in: query
         name: networkzone
         required: true

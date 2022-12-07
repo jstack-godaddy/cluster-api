@@ -19,7 +19,8 @@ import (
 // @Param       project   		query	string  true 	"Project Name"
 // @Param		name	  		query	string  true    "Cluster Name"
 // @Param		shortname		query	string  true    "Abbreviation for naming. No more than 8 characters."
-// @Param		networkzone		query	string  true    "Network Zone" Enums(mgt, prd, cor, gcn)
+// @Param		flavor			query	string	true	"How big do you want it?" Enums(c8.r16.d200,c12.r32.d300,c12.r64.d300,c16.r96.d900,c16.r128.d1200)
+// @Param		networkzone		query	string  true    "Network Zone" Enums(mgt, prd, cor)
 // @Param		privateOrPublic	query	string  true   	"Public or Private floater" Enums(private, public)
 // @Success 200 {string} Example JSON Output
 // @Router /cluster [post]
