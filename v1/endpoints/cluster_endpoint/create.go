@@ -4,7 +4,6 @@ import (
 	"dbs-api/v1/helpers"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,11 +20,10 @@ import (
 // @Param		name	  		query	string  true    "The friendly name for your identification."
 // @Param		shortname		query	string  true    "Abbreviation for naming. Between 3 and 7 characters long." minlength(3) maxlength(7)
 // @Param		flavor			query	string	true	"How big do you want it?" Enums(c8.r16.d200,c12.r32.d300,c12.r64.d300,c16.r96.d900,c16.r128.d1200)
-// @Param		networkzone		query	string  true    "Network Zone cluster will live in." Enums(mgt, prd, cor)
+// @Param		networkzone		query	string  true    "Network Zone cluster will live in." Enums(prd, prd-public, mgt, cor)
 // @Param		os				query	string  true    "Operating System for the cluster." Enums(alma8, cent7)
 // @Param		env				query	string  true    "Environment of cluster. Dev/Test/Stg/OTE/Prod" Enums(d, t, s , o, p)
 // @Param		db				query	string  true    "Database Technology being leveraged." Enums(mysql8, mysql57)
-// @Param		public			query	boolean true   	"Is this going to be public?" default(false)
 // @Success 200 {string} Example JSON Output
 // @Router /cluster [post]
 func Create(g *gin.Context) {
@@ -36,7 +34,6 @@ func Create(g *gin.Context) {
 	os := g.Request.URL.Query().Get("os")
 	db := g.Request.URL.Query().Get("db")
 	env := g.Request.URL.Query().Get("env")
-	public, _ := strconv.ParseBool(g.Request.URL.Query().Get("public"))
 
 	project := g.Request.URL.Query().Get("project")
 	if project == "" {
@@ -56,13 +53,17 @@ func Create(g *gin.Context) {
 		return
 	}
 
-	serversCreated, err := ngosClient.NewCluster(shortname, dc, db, os, networkzone, env, flavor, public)
+	serversCreated, fip, err := ngosClient.NewCluster(shortname, dc, db, os, networkzone, env, flavor)
 	fmt.Println(serversCreated)
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 		return
 	} else {
-		g.String(http.StatusOK, "Servers created")
+		msg := fmt.Sprintf("The cluster has been created. The floater is %s. The folowing servers were created:\n", fip.IP)
+		for i := 1; i <= len(serversCreated); i++ {
+			msg += fmt.Sprintf("%d: %s\n", i, serversCreated[i-1].ID)
+		}
+		g.String(http.StatusOK, msg)
 		return
 	}
 }
