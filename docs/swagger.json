@@ -140,28 +140,30 @@
                             "iad"
                         ],
                         "type": "string",
-                        "description": "Datacenter",
+                        "description": "Datacenter the project is in.",
                         "name": "dc",
                         "in": "query",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "Project Name",
+                        "description": "Project Name to create the cluster into.",
                         "name": "project",
                         "in": "query",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "Cluster Name",
+                        "description": "The friendly name for your identification.",
                         "name": "name",
                         "in": "query",
                         "required": true
                     },
                     {
+                        "maxLength": 7,
+                        "minLength": 3,
                         "type": "string",
-                        "description": "Abbreviation for naming. No more than 8 characters.",
+                        "description": "Abbreviation for naming. Between 3 and 7 characters long.",
                         "name": "shortname",
                         "in": "query",
                         "required": true
@@ -187,19 +189,52 @@
                             "cor"
                         ],
                         "type": "string",
-                        "description": "Network Zone",
+                        "description": "Network Zone cluster will live in.",
                         "name": "networkzone",
                         "in": "query",
                         "required": true
                     },
                     {
                         "enum": [
-                            "private",
-                            "public"
+                            "alma8",
+                            "cent7"
                         ],
                         "type": "string",
-                        "description": "Public or Private floater",
-                        "name": "privateOrPublic",
+                        "description": "Operating System for the cluster.",
+                        "name": "os",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "d",
+                            "t",
+                            "s",
+                            "o",
+                            "p"
+                        ],
+                        "type": "string",
+                        "description": "Environment of cluster. Dev/Test/Stg/OTE/Prod",
+                        "name": "env",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "mysql8",
+                            "mysql57"
+                        ],
+                        "type": "string",
+                        "description": "Database Technology being leveraged.",
+                        "name": "db",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Is this going to be public?",
+                        "name": "public",
                         "in": "query",
                         "required": true
                     }

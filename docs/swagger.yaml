@@ -96,7 +96,7 @@ paths:
       - application/json
       description: Create a new cluster.
       parameters:
-      - description: Datacenter
+      - description: Datacenter the project is in.
         enum:
         - phx
         - sxb
@@ -105,18 +105,20 @@ paths:
         name: dc
         required: true
         type: string
-      - description: Project Name
+      - description: Project Name to create the cluster into.
         in: query
         name: project
         required: true
         type: string
-      - description: Cluster Name
+      - description: The friendly name for your identification.
         in: query
         name: name
         required: true
         type: string
-      - description: Abbreviation for naming. No more than 8 characters.
+      - description: Abbreviation for naming. Between 3 and 7 characters long.
         in: query
+        maxLength: 7
+        minLength: 3
         name: shortname
         required: true
         type: string
@@ -131,7 +133,7 @@ paths:
         name: flavor
         required: true
         type: string
-      - description: Network Zone
+      - description: Network Zone cluster will live in.
         enum:
         - mgt
         - prd
@@ -140,14 +142,39 @@ paths:
         name: networkzone
         required: true
         type: string
-      - description: Public or Private floater
+      - description: Operating System for the cluster.
         enum:
-        - private
-        - public
+        - alma8
+        - cent7
         in: query
-        name: privateOrPublic
+        name: os
         required: true
         type: string
+      - description: Environment of cluster. Dev/Test/Stg/OTE/Prod
+        enum:
+        - d
+        - t
+        - s
+        - o
+        - p
+        in: query
+        name: env
+        required: true
+        type: string
+      - description: Database Technology being leveraged.
+        enum:
+        - mysql8
+        - mysql57
+        in: query
+        name: db
+        required: true
+        type: string
+      - default: false
+        description: Is this going to be public?
+        in: query
+        name: public
+        required: true
+        type: boolean
       produces:
       - application/json
       responses:

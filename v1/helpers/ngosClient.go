@@ -33,6 +33,12 @@ var images = map[string]string{
 	"cent7": "f2df980d-478e-4e08-9513-501c5ee09802",
 }
 
+var dcs = map[string]string{
+	"phx": "p3",
+	"sxb": "sxb1",
+	"iad": "a2",
+}
+
 func NewNGOSClient(identityEndpoint string, tenantName string) (ngosclient *NGOSClient, err error) {
 	godotenv.Load("./.os_creds.env")
 	opts := gophercloud.AuthOptions{
@@ -55,24 +61,39 @@ func NewNGOSClient(identityEndpoint string, tenantName string) (ngosclient *NGOS
 	return &NGOSClient{client}, err
 }
 
-func (client *NGOSClient) NewCluster(shortName string, networkZone string, public bool) (servers []*servers.Server, err error) {
-	serverName := "p3pltestboxdb-a"
-	server, err := client.newServer(networkZone, serverName)
-	if err != nil {
-		return
+func (client *NGOSClient) NewCluster(shortName string, dc string, db string, os string, networkZone string, env string, flavor string, public bool) (servers []*servers.Server, err error) {
+	quantity := 2
+	foo := "abcdefghijklmnopqrstuvqxyz"
+
+	switch db {
+	case "mysql8":
+		quantity = 2
+	case "mysql57":
+		quantity = 2
 	}
-	servers = append(servers, server)
+
+	for i := 1; i <= quantity; i++ {
+		trailing_char := string(foo[i-1])
+		serverName := fmt.Sprintf("%s%sl%sdb-%s", dcs[dc], env, shortName, trailing_char)
+		server, err := client.newServer(serverName, os, networkZone, flavor)
+		if err != nil {
+			servers = append(servers, server)
+			return servers, err
+		}
+		servers = append(servers, server)
+	}
+
 	return
 }
 
-func (client *NGOSClient) newServer(networkZone string, serverName string) (server *servers.Server, err error) {
+func (client *NGOSClient) newServer(serverName string, os string, networkZone string, flavor string) (server *servers.Server, err error) {
 	var networks []servers.Network
 	networks = append(networks, networkZones[networkZone])
 	fmt.Println(networks)
 	server, err = servers.Create(client.ServiceClient, servers.CreateOpts{
 		Name:      serverName,
-		FlavorRef: "a21bcced-5377-49e3-96f8-89e8e9fd5e8d",
-		ImageRef:  "07d88770-1f3c-4c22-941d-477f853eab89",
+		FlavorRef: flavors[flavor],
+		ImageRef:  images[os],
 		Networks:  networks,
 	}).Extract()
 	return

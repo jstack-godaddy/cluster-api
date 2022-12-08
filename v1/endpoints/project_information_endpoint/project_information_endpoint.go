@@ -2,7 +2,6 @@ package project_information_endpoint
 
 import (
 	"dbs-api/v1/helpers"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -40,7 +39,6 @@ func ProjectsByTeam(g *gin.Context) {
 	owning_team := g.Request.URL.Query().Get("owning_team")
 
 	projects, err := Cdb.GetProjectsByTeam(owning_team)
-	fmt.Println(projects)
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 	} else if len(projects) == 0 {
