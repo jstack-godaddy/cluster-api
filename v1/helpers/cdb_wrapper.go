@@ -108,35 +108,35 @@ func NewClusterDBConn() (cdb *ClusterDB) {
 
 func (db *ClusterDB) GetAllDataCenters() (dcs []Datacenter, err error) {
 
-	db.Select(&dcs, all_datacenters_query)
+	err = db.Select(&dcs, all_datacenters_query)
 
 	return
 }
 
 func (db *ClusterDB) GetAllEnvironments() (envs []Environment, err error) {
 
-	db.Select(&envs, all_environments_query)
+	err = db.Select(&envs, all_environments_query)
 
 	return
 }
 
 func (db *ClusterDB) GetAllNetworkZones() (nzs []NetworkZone, err error) {
 
-	db.Select(&nzs, all_network_zones_query)
+	err = db.Select(&nzs, all_network_zones_query)
 
 	return
 }
 
 func (db *ClusterDB) GetAllFlavors() (flavors []Flavor, err error) {
 
-	db.Select(&flavors, all_flavors_query)
+	err = db.Select(&flavors, all_flavors_query)
 
 	return
 }
 
 func (db *ClusterDB) GetAllDatastores() (datastores []Datastore, err error) {
 
-	db.Select(&datastores, all_datastores_query)
+	err = db.Select(&datastores, all_datastores_query)
 
 	return
 }
@@ -147,14 +147,14 @@ func (db *ClusterDB) GetProjectsByTeam(team string) (projects []Project, err err
 	row := db.QueryRowx(team_id_from_name_query, team)
 	_ = row.Scan(&team_id)
 
-	db.Select(&projects, projects_by_team_query, team_id)
+	err = db.Select(&projects, projects_by_team_query, team_id)
 
 	return
 }
 
 func (db *ClusterDB) GetServersByProject(project_id string) (servers []Server, err error) {
 
-	db.Select(&servers, servers_by_project_query, project_id)
+	err = db.Select(&servers, servers_by_project_query, project_id)
 
 	return
 }

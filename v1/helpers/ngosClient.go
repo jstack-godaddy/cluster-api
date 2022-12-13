@@ -109,6 +109,7 @@ func (client *NGOSClient) NewCluster(shortName string, dc string, db string, os 
 		if err != nil {
 			break
 		}
+		server.Name = serverName
 		serversBuilt = append(serversBuilt, server)
 		if i == 1 {
 			go client.associateFloater(server, floater)
