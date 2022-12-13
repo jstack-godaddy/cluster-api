@@ -55,6 +55,7 @@ func Create(g *gin.Context) {
 
 	serversCreated, fip, err := ngosClient.NewCluster(shortname, dc, db, os, networkzone, env, flavor)
 	fmt.Println(serversCreated)
+	// TO DO: Add to DB Metadata.
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 		return
