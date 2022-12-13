@@ -111,7 +111,7 @@ func ServersByProjectRaw(g *gin.Context) {
 	listOpts := servers.ListOpts{
 		AllTenants: false,
 	}
-	allPages, err := servers.List(ngosClient.ServiceClient, listOpts).AllPages()
+	allPages, err := servers.List(ngosClient.ComputeClient, listOpts).AllPages()
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 		return

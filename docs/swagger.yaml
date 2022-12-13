@@ -135,8 +135,9 @@ paths:
         type: string
       - description: Network Zone cluster will live in.
         enum:
-        - mgt
         - prd
+        - prd-public
+        - mgt
         - cor
         in: query
         name: networkzone
@@ -144,8 +145,7 @@ paths:
         type: string
       - description: Operating System for the cluster.
         enum:
-        - alma8
-        - cent7
+        - almalinux8
         in: query
         name: os
         required: true
@@ -169,12 +169,6 @@ paths:
         name: db
         required: true
         type: string
-      - default: false
-        description: Is this going to be public?
-        in: query
-        name: public
-        required: true
-        type: boolean
       produces:
       - application/json
       responses:

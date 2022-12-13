@@ -196,8 +196,9 @@ const docTemplate = `{
                     },
                     {
                         "enum": [
-                            "mgt",
                             "prd",
+                            "prd-public",
+                            "mgt",
                             "cor"
                         ],
                         "type": "string",
@@ -208,8 +209,7 @@ const docTemplate = `{
                     },
                     {
                         "enum": [
-                            "alma8",
-                            "cent7"
+                            "almalinux8"
                         ],
                         "type": "string",
                         "description": "Operating System for the cluster.",
@@ -239,14 +239,6 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Database Technology being leveraged.",
                         "name": "db",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "boolean",
-                        "default": false,
-                        "description": "Is this going to be public?",
-                        "name": "public",
                         "in": "query",
                         "required": true
                     }
