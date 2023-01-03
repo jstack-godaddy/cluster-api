@@ -163,7 +163,7 @@ paths:
         type: string
       - description: Database Technology being leveraged.
         enum:
-        - mysql8
+        - mysql80
         - mysql57
         in: query
         name: db

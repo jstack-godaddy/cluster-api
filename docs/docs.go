@@ -233,7 +233,7 @@ const docTemplate = `{
                     },
                     {
                         "enum": [
-                            "mysql8",
+                            "mysql80",
                             "mysql57"
                         ],
                         "type": "string",

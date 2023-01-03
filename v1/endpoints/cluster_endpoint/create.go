@@ -3,10 +3,16 @@ package cluster_endpoint
 import (
 	"dbs-api/v1/helpers"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
+
+type combinedClusterServer struct {
+	cluster helpers.Cluster
+	servers []helpers.Server
+}
 
 // CREATE POST
 // @Summary Create a server cluster
@@ -23,7 +29,7 @@ import (
 // @Param		networkzone		query	string  true    "Network Zone cluster will live in." Enums(prd, prd-public, mgt, cor)
 // @Param		os				query	string  true    "Operating System for the cluster." Enums(almalinux8)
 // @Param		env				query	string  true    "Environment of cluster. Dev/Test/Stg/OTE/Prod" Enums(d, t, s , o, p)
-// @Param		db				query	string  true    "Database Technology being leveraged." Enums(mysql8, mysql57)
+// @Param		db				query	string  true    "Database Technology being leveraged." Enums(mysql80, mysql57)
 // @Success 200 {string} Example JSON Output
 // @Router /cluster [post]
 func Create(g *gin.Context) {
@@ -54,17 +60,28 @@ func Create(g *gin.Context) {
 	}
 
 	serversCreated, fip, err := ngosClient.NewCluster(shortname, dc, db, os, networkzone, env, flavor)
-	//fmt.Println(serversCreated)
-	// TO DO: Add to DB Metadata.
+	fmt.Println(serversCreated)
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 		return
-	} else {
-		msg := fmt.Sprintf("The cluster has been created. Please allow 30 minutes for set up to complete. The floater is %s. The folowing servers were created:\n", fip.IP)
-		for i := 1; i <= len(serversCreated); i++ {
-			msg += fmt.Sprintf("%d: %s\n", i, serversCreated[i-1].Name)
-		}
-		g.String(http.StatusOK, msg)
+	}
+
+	cdb := helpers.NewClusterDBConn()
+	err = cdb.Ping()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	clusterReturn, serversReturn, err := cdb.InsertMetadata(clusterName, project, os, networkzone, db, env, flavor, fip, serversCreated)
+	if err != nil {
+		log.Fatalln(err)
+		g.String(http.StatusBadRequest, err.Error())
 		return
 	}
+
+	jr := combinedClusterServer{
+		cluster: clusterReturn,
+		servers: serversReturn,
+	}
+	g.JSON(http.StatusOK, jr)
 }
