@@ -33,7 +33,7 @@ type Environment struct {
 	Id            int    `db:"env_id"`
 	Name          string `db:"env_name"`
 	Abbr          string `db:"env_abbr"`
-	Single_letter string `db:"env_single_letter"`
+	Single_letter string `db:"env_sl"`
 }
 
 type NetworkZone struct {
@@ -43,11 +43,12 @@ type NetworkZone struct {
 }
 
 type Flavor struct {
-	Id   int `db:"flavor_id"`
-	Cpus int `db:"cpus"`
-	Ram  int `db:"ram"`
-	Disk int `db:"disk"`
-	Cost int `db:"cost"`
+	Id   int    `db:"flavor_id"`
+	Name string `db:"flavor_name"`
+	Cpus int    `db:"cpus"`
+	Ram  int    `db:"ram"`
+	Disk int    `db:"disk"`
+	Cost int    `db:"cost"`
 }
 
 type Team struct {
@@ -58,11 +59,10 @@ type Team struct {
 }
 
 type Project struct {
-	Id          int    `db:"project_id"`
-	Name        string `db:"project_name"`
-	Datacenter  string `db:"dc_id"`
-	Team        string `db:"team_id"`
-	Environment string `db:"env_id"`
+	Id         int    `db:"project_id"`
+	Name       string `db:"project_name"`
+	Datacenter string `db:"dc_id"`
+	Team       string `db:"team_id"`
 }
 
 type Cluster struct {
@@ -70,14 +70,15 @@ type Cluster struct {
 	Name         string `db:"cluster_name"`
 	Project_id   int    `db:"project_id"`
 	Network_zone int    `db:"nz_id"`
-	Environment  int    `db:"environment_id"`
 	Datastore    int    `db:"datastore_id"`
+	Environment  int    `db:"env_id"`
 	Floater      string `db:"floater"`
 	Floater_v6   string `db:"floater_v6"`
 	Created_on   string `db:"created_on"`
 }
 type Server struct {
 	Id         int    `db:"server_id"`
+	Os_id      string `db:"os_id"`
 	Cluster    int    `db:"cluster_id"`
 	Flavor     int    `db:"flavor_id"`
 	Hostname   string `db:"hostname"`
@@ -88,27 +89,28 @@ type Server struct {
 }
 
 const (
-	dsn_const                  = "%s:%s@tcp(%s:3306)/cluster_api"
-	all_datacenters_query      = `SELECT * FROM datacenters`
-	all_datastores_query       = `SELECT * FROM datastores`
-	all_environments_query     = `SELECT * FROM environments`
-	all_network_zones_query    = `SELECT * FROM network_zones`
-	all_flavors_query          = `SELECT * FROM flavors`
-	team_id_from_name_query    = `SELECT team_id FROM teams WHERE team_snow=?`
-	projects_by_team_query     = `SELECT * FROM projects WHERE team_id=?`
-	project_id_from_name_query = `SELECT project_id FROM projects WHERE project_name=?`
-	servers_by_project_query   = `SELECT * FROM servers WHERE project_id=?`
-	server_by_shortname        = `SELECT * FROM servers WHERE hostname=?`
-	select_project_by_name     = `SELECT * FROM projects WHERE project_name=?`
-	select_cluster_by_name     = `SELECT * FROM clusters where cluster_name=?`
-	select_nz_by_name          = `SELECT * FROM network_zones WHERE nz_name=?`
-	select_datastore_by_name   = `SELECT * FROM datastores WHERE datastore_name=?`
-	select_flavor_by_name      = `SELECT * FROM flavor WHERE flavor_name=?`
-	select_env_by_sl           = `SELECT * FROM environments WHERE environment_single_letter=?`
-	insert_cluster             = `INSERT INTO cluster (cluster_name,project_id,nz_id,datastore_id,floater,floater_v6) floater (:cluster_name,
-		:project_id,:nz_id,:datastore_id,:floater,:floater_v6)`
-	insert_server = `INSERT INTO server (cluster_id,hostname,nz_id,operating_system,ip,ipv6) floater (:cluster_id,:hostname,:operating_system,
-		:datastore_id,:floater,:floater_v6)`
+	dsn_const                   = "%s:%s@tcp(%s:3306)/cluster_api"
+	all_datacenters_query       = `SELECT * FROM datacenters`
+	all_datastores_query        = `SELECT * FROM datastores`
+	all_environments_query      = `SELECT * FROM environments`
+	all_network_zones_query     = `SELECT * FROM network_zones`
+	all_flavors_query           = `SELECT * FROM flavors`
+	team_id_from_name_query     = `SELECT team_id FROM teams WHERE team_snow=?`
+	projects_by_team_query      = `SELECT * FROM projects WHERE team_id=?`
+	project_id_from_name_query  = `SELECT project_id FROM projects WHERE project_name=?`
+	servers_by_project_query    = `SELECT * FROM servers WHERE project_id=?`
+	servers_by_cluster_id_query = `SELECT * FROM servers where cluster_id=?`
+	server_by_shortname         = `SELECT * FROM servers WHERE hostname=?`
+	select_project_by_name      = `SELECT * FROM projects WHERE project_name=?`
+	select_cluster_by_name      = `SELECT * FROM clusters where cluster_name=? ORDER BY created_on DESC`
+	select_nz_by_abbr           = `SELECT * FROM network_zones WHERE nz_abbr=?`
+	select_datastore_by_abbr    = `SELECT * FROM datastores WHERE datastore_abbr=?`
+	select_flavor_by_name       = `SELECT * FROM flavors WHERE flavor_name=?`
+	select_env_by_sl            = `SELECT * FROM environments WHERE env_sl=?`
+	insert_cluster              = `INSERT INTO clusters (cluster_name,project_id,nz_id,datastore_id,env_id,floater,floater_v6) VALUES (:cluster_name,
+		:project_id,:nz_id,:env_id,:datastore_id,:floater,:floater_v6)`
+	insert_server = `INSERT INTO servers (os_id,cluster_id,flavor_id,hostname,operating_system,ip,ipv6) VALUES (:os_id,:cluster_id,:flavor_id,:hostname,
+		:operating_system,:ip,:ipv6)`
 )
 
 // Create new connection to OPSDB
@@ -176,41 +178,24 @@ func (db *ClusterDB) GetServersByProject(project_id string) (servers []Server, e
 
 // METADATA METHODS
 // These methods insert or delete metadata from the OPSDB
-func (db *ClusterDB) InsertMetadata(clusterName string, projectName string, os string, networkZone string, dbName string,
+func (db *ClusterDB) InsertMetadata(clusterName string, projectName string, os string, networkZone string, dbAbbr string,
 	envSL string, flavorName string, floatingIP *floatingips.FloatingIP, serversCreated []*servers.Server) (clusterResult Cluster, serversResult []Server, err error) {
 
-	fmt.Println("attempting metadata insertion")
 	// query for the needful
 	var project Project
-	err = db.Select(&project, select_project_by_name, projectName)
-	if err != nil {
-		return
-	}
+	_ = db.QueryRowx(select_project_by_name, projectName).StructScan(&project)
 
 	var nz NetworkZone
-	err = db.Select(&nz, select_nz_by_name, networkZone)
-	if err != nil {
-		return
-	}
+	_ = db.QueryRowx(select_nz_by_abbr, networkZone).StructScan(&nz)
 
 	var ds Datastore
-	err = db.Select(&ds, select_datastore_by_name, dbName)
-	if err != nil {
-		return
-	}
+	_ = db.QueryRowx(select_datastore_by_abbr, dbAbbr).StructScan(&ds)
 
 	var flavor Flavor
-	err = db.Select(&flavor, select_flavor_by_name, flavorName)
-	if err != nil {
-		return
-	}
+	_ = db.QueryRowx(select_flavor_by_name, flavorName).StructScan(&flavor)
 
 	var env Environment
-	err = db.Select(&env, select_env_by_sl, envSL)
-	if err != nil {
-		return
-	}
-	fmt.Println("got all IDs")
+	_ = db.QueryRowx(select_env_by_sl, envSL).StructScan(&env)
 
 	// process raw input above into structs that match schema
 	clusterRaw := Cluster{
@@ -222,15 +207,13 @@ func (db *ClusterDB) InsertMetadata(clusterName string, projectName string, os s
 		Floater:      floatingIP.IP,
 	}
 
-	clusterResult, err = db.insertClusterMetadata(clusterRaw)
-	if err != nil {
-		return
-	}
+	clusterResult, _ = db.insertClusterMetadata(clusterRaw)
 
 	var serversRaw []Server
 	for i := 1; i <= len(serversCreated); i++ {
 		//msg += fmt.Sprintf("%d: %s\n", i, serversCreated[i-1].Name)
 		addMe := Server{
+			Os_id:    serversCreated[i-1].ID,
 			Cluster:  clusterResult.Id,
 			Hostname: serversCreated[i-1].Name,
 			Flavor:   flavor.Id,
@@ -240,7 +223,7 @@ func (db *ClusterDB) InsertMetadata(clusterName string, projectName string, os s
 		}
 		serversRaw = append(serversRaw, addMe)
 	}
-	err = db.insertServerMetadata(serversRaw)
+	serversResult, _ = db.insertServerMetadata(serversRaw, clusterResult.Id)
 
 	return
 }
@@ -252,13 +235,17 @@ func (db *ClusterDB) insertClusterMetadata(cluster Cluster) (clusterResult Clust
 		return
 	}
 
-	err = db.Select(&clusterResult, select_cluster_by_name, cluster.Name)
+	_ = db.QueryRowx(select_cluster_by_name, cluster.Name).StructScan(&clusterResult)
 	return
 }
 
-func (db *ClusterDB) insertServerMetadata(servers []Server) (err error) {
+func (db *ClusterDB) insertServerMetadata(servers []Server, cluster_id int) (serversResult []Server, err error) {
 
 	_, err = db.NamedExec(insert_server, servers)
+	if err != nil {
+		return
+	}
+	err = db.Select(&serversResult, servers_by_cluster_id_query, cluster_id)
 
 	return
 }

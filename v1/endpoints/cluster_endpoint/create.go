@@ -2,17 +2,11 @@ package cluster_endpoint
 
 import (
 	"dbs-api/v1/helpers"
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
-
-type combinedClusterServer struct {
-	cluster helpers.Cluster
-	servers []helpers.Server
-}
 
 // CREATE POST
 // @Summary Create a server cluster
@@ -60,7 +54,6 @@ func Create(g *gin.Context) {
 	}
 
 	serversCreated, fip, err := ngosClient.NewCluster(shortname, dc, db, os, networkzone, env, flavor)
-	fmt.Println(serversCreated)
 	if err != nil {
 		g.String(http.StatusBadRequest, err.Error())
 		return
@@ -79,9 +72,5 @@ func Create(g *gin.Context) {
 		return
 	}
 
-	jr := combinedClusterServer{
-		cluster: clusterReturn,
-		servers: serversReturn,
-	}
-	g.JSON(http.StatusOK, jr)
+	g.JSON(http.StatusOK, gin.H{"Cluster": clusterReturn, "Servers": serversReturn})
 }
